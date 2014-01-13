@@ -54,7 +54,7 @@ void PILEtoString(struct Requete * PILE,int pMax){
 
 void wait(int pTps){
 	int i,c;
-	for(i=0; i<pTps*10000; i++){
+	for(i=0; i<pTps*100; i++){
 		c=c*50;
 		c=c/50;
 		c=c*33;
