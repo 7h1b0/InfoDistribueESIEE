@@ -122,6 +122,8 @@ int main (int argc, char* argv[]) {
 		puts("Synchro recue de  Site 0");
 	}
 
+	printf("Je suis le site numero : %d \n",GetSitePos(NSites, argv) );
+
   
 	/* Passage en mode non bloquant du accept pour tous*/
 	/*---------------------------------------*/
@@ -131,7 +133,7 @@ int main (int argc, char* argv[]) {
 	/* Boucle infini*/
 	for(v=0;v<50;v++) {
 
-		// On commence par tester l'arrivée d'un message
+		// On commence par tester l'arrivÃ©e d'un message
 		s_service=accept(s_ecoute,(struct sockaddr*) &sock_add_dist,&size_sock);
 		if (s_service>0) {
 
@@ -166,7 +168,7 @@ int main (int argc, char* argv[]) {
 
 			vBoolean = 0; //On ne peut pas demander 2 fois de suite la SC
 			
-			//On créé la requete
+			//On crÃ©Ã© la requete
 			Requete Requete1;
 			Requete1.site = GetSitePos(NSites, argv);
 			Requete1.horloge = vHorloge;
@@ -175,9 +177,9 @@ int main (int argc, char* argv[]) {
 
 			//On envoi la requete a tout le monde
 			for(i=0;i<NSites;i++){
-				if(i != Requete1.site ){ //Tout le monde sauf nous-même
+				if(i != Requete1.site ){ //Tout le monde sauf nous-mÃªme
 					SendMsg(argv[2+i], atoi(argv[1])+i, vBuffer);
-				} else{ //Si nous même, on ajoute dans notre pile
+				} else{ //Si nous mÃªme, on ajoute dans notre pile
 					push(Requete1, PILE,&vMax);
 				}
 			}
@@ -190,9 +192,10 @@ int main (int argc, char* argv[]) {
 			vBoolean = 1; //On reactive la possibilite de rentrer en SC
 
 			wait(10000); //attente
+			puts("Je sors de la SC");
 
 			for(i=0;i<NSites;i++){
-				if(i != GetSitePos(NSites, argv) ){ //Tout le monde sauf nous-même
+				if(i != GetSitePos(NSites, argv) ){ //Tout le monde sauf nous-mÃªme
 					SendMsg(argv[2+i], atoi(argv[1])+i, "liberation");
 				} else { // Si c'est moi, on delete le premier de la liste
 					delFirst(PILE, &vMax);
@@ -210,5 +213,4 @@ int main (int argc, char* argv[]) {
 	close (s_ecoute);  
 	return 0;
 }
-
 
