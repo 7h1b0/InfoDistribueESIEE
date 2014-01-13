@@ -28,17 +28,19 @@ void push(struct Requete pRequete,struct Requete * PILE, int* pMax){
 	tri_bulle(PILE, *pMax);
 }
 
+/* Suppression de la première Requete de la liste */
+void pop(struct Requete * PILE, int *pMax){
+	PILE[0] = PILE[*pMax]; // On place la derniere requete à la première place
+	*pMax -= 1; // On reduit la taille de la PILE
+	tri_bulle(PILE, *pMax);//Et on trie, Oh Oui !
+}
+
 /* Retourne vrai si Requete du site est en premiere position  */
 int isFirst(struct Requete * PILE, int pSite){
 	return (PILE[0].site == pSite) ? 1 : 0;
 }
 
-/* Suppression de la première Requete de la liste */
-void delFirst(struct Requete * PILE, int *pMax){
-	PILE[0] = PILE[*pMax]; // On place la derniere requete à la première place
-	*pMax -= 1; // On reduit la taille de la PILE
-	tri_bulle(PILE, *pMax);//Et on trie, Oh Oui !
-}
+
 
 /* Converti une Pile en String affichable */
 void PILEtoString(struct Requete * PILE,int pMax){
