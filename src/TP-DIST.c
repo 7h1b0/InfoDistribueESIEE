@@ -147,7 +147,7 @@ int main (int argc, char* argv[]) {
 				vCompteur ++;
 			} else if(strcmp(texte,"liberation")==0){
 				puts("Liberation recu");
-				delFirst(PILE, &vMax);
+				pop(PILE, &vMax);
 			} else {
 				Requete Requete1;
 				StringToRequete(texte, &Requete1);
@@ -198,7 +198,7 @@ int main (int argc, char* argv[]) {
 				if(i != GetSitePos(NSites, argv) ){ //Tout le monde sauf nous-même
 					SendMsg(argv[2+i], atoi(argv[1])+i, "liberation");
 				} else { // Si c'est moi, on delete le premier de la liste
-					delFirst(PILE, &vMax);
+					pop(PILE, &vMax);
 				}
 			}
 		}
