@@ -62,7 +62,7 @@ void Horloge(int * pHorloge, int pHorlogeMessage){
 	if(pHorlogeMessage > *pHorloge){
 		*pHorloge = pHorlogeMessage+1;
 	} else{
-		*pHorloge ++;
+		*pHorloge += 1;
 	}
 }
 
