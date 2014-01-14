@@ -131,40 +131,45 @@ int main (int argc, char* argv[]) {
 	size_sock=sizeof(struct sockaddr_in);
 
 	/* Boucle infini*/
-	for(v=0;v<50;v++) {
-
+	//for(v=0;v<50;v++) {
+	while(1){
 		// On commence par tester l'arrivée d'un message
 		s_service=accept(s_ecoute,(struct sockaddr*) &sock_add_dist,&size_sock);
 		if (s_service>0) {
-
+			
 			//Extraction et affichage du message
 			l=read(s_service,texte,39);
 			texte[l] ='\0';
 
-			//Distinction des messages
-			if(strcmp(texte,"reponse")==0){
-				puts("Reponse recu");
+			//Conversion du message recu en requete
+			Requete Requete1;
+			StringToRequete(texte, &Requete1);
+
+			//Mise a jour de l'horloge
+			Horloge(&vHorloge, Requete1.horloge); 
+
+			//Distinction des messages en fonction de la valeur du site
+			if(Requete1.site == NSites +1){
+				printf("Reponse recu : %d \n", vHorloge);
 				vCompteur ++;
-			} else if(strcmp(texte,"liberation")==0){
-				puts("Liberation recu");
+			} else if(Requete1.site == NSites +2){
+				printf("Liberation recu : %d \n",vHorloge);
 				pop(PILE, &vMax);
 			} else {
-				Requete Requete1;
-				StringToRequete(texte, &Requete1);
-
 				push(Requete1, PILE,&vMax);
 
 				//On envoi la reponse de la bonne reception de la requete
-				SendMsg(argv[2+Requete1.site], atoi(argv[1])+Requete1.site, "reponse");
+				char vTexte[20];
+				sprintf(vTexte,"%d:%d",NSites+1,vHorloge);
+				SendMsg(argv[2+Requete1.site], atoi(argv[1])+Requete1.site, vTexte);
+				printf("Requete recu : %d \n",vHorloge); 
 			}
 			
-			vHorloge ++; //On augmente l'horloge car evenement  -- reception
-			printf("Message recu : %d \n", vHorloge);
 			close (s_service);
 
 		}else if(SC() == 1 && vBoolean){ //On veux entrer en SC
 			vHorloge++; //On augmente l'horloge car evenement -- envoi
-			printf("Message envoye : %d \n", vHorloge);
+			printf("Requete envoye : %d \n", vHorloge);
 
 			vBoolean = 0; //On ne peut pas demander 2 fois de suite la SC
 			
@@ -183,34 +188,41 @@ int main (int argc, char* argv[]) {
 					push(Requete1, PILE,&vMax);
 				}
 			}
-		}
+		} 
 
-  		if(vCompteur == NSites && isFirst(PILE, GetSitePos(NSites, argv) ) ){
-			puts("Je passe en SC");			
+  		if(vCompteur == NSites ){
+			if(isFirst(PILE, GetSitePos(NSites, argv) )) {
+				puts("Je passe en SC");			
 			
-			vCompteur = 1;
-			vBoolean = 1; //On reactive la possibilite de rentrer en SC
+				vCompteur = 1;
+				vBoolean = 1; //On reactive la possibilite de rentrer en SC
 
-			wait(10000); //attente
-			puts("Je sors de la SC");
+				wait(10000); //attente
+				puts("Je sors de la SC");
 
-			for(i=0;i<NSites;i++){
-				if(i != GetSitePos(NSites, argv) ){ //Tout le monde sauf nous-même
-					SendMsg(argv[2+i], atoi(argv[1])+i, "liberation");
-				} else { // Si c'est moi, on delete le premier de la liste
-					pop(PILE, &vMax);
+				for(i=0;i<NSites;i++){
+					if(i != GetSitePos(NSites, argv) ){ //Tout le monde sauf nous-même
+						char vTexte[20];
+						sprintf(vTexte,"%d:%d",NSites+2,vHorloge);
+						SendMsg(argv[2+i], atoi(argv[1])+i, vTexte);
+					} else { // Si c'est moi, on delete le premier de la liste
+						pop(PILE, &vMax);
+					}
 				}
+				puts("Envoi des liberations");
 			}
+				
 		}
 
 		wait(10000); //attente
     
    		//printf(".");fflush(0); /* pour montrer que le serveur est actif*/
 	}
+
+	puts("merdouille");
 	PILEtoString(PILE, vMax);
 
 	free(PILE);
 	close (s_ecoute);  
 	return 0;
 }
-
