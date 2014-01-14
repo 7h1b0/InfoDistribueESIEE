@@ -26,13 +26,15 @@ void push(struct Requete pRequete,struct Requete * PILE, int* pMax){
 	PILE[*pMax] = pRequete;
 	*pMax+=1;
 	tri_bulle(PILE, *pMax);
+	//quicksort(PILE, *pMax);
 }
 
 /* Suppression de la première Requete de la liste */
 void pop(struct Requete * PILE, int *pMax){
-	PILE[0] = PILE[*pMax]; // On place la derniere requete à la première place
+	PILE[0] = PILE[*pMax-1]; // On place la derniere requete à la première place
 	*pMax -= 1; // On reduit la taille de la PILE
 	tri_bulle(PILE, *pMax);//Et on trie, Oh Oui !
+	//quicksort(PILE, *pMax);
 }
 
 /* Retourne vrai si Requete du site est en premiere position  */
@@ -48,10 +50,20 @@ void PILEtoString(struct Requete * PILE,int pMax){
 	char vString[500] = "";
 	for(i=0;i<pMax;i++){
 		char Buffer[20];
+
 		RequeteToString(PILE[i], Buffer);
 		sprintf(vString, "%s - %s", vString, Buffer);
 	}
+	sprintf(vString, "%s - %d", vString, pMax);
 	printf("%s \n",vString);
+}
+
+void Horloge(int * pHorloge, int pHorlogeMessage){
+	if(pHorlogeMessage > *pHorloge){
+		*pHorloge = pHorlogeMessage+1;
+	} else{
+		*pHorloge ++;
+	}
 }
 
 void wait(int pTps){
