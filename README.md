@@ -10,7 +10,3 @@ messages. Basé sur un jeton circulant dans un anneau logique de processus.
 1. Copier le programme sur plusieurs PC
 2. Lancer dans chaque PC un terminal dans le dossier src et faire ``` make ```
 3. Puis lancer la commande ```./serveur 5500 monPC1 monPC2 monPC3 ... ```
-
-## Autheurs
-* Patois Thibault
-* Rollot Quentin
